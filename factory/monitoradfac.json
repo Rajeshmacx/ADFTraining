@@ -1,0 +1,9 @@
+{
+	"name": "monitoradfac",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c1f82f47-b0ee-4516-a949-2a748d314899",
+		"tenantId": "51099f15-499b-44d5-a287-ac53ac263895"
+	}
+}

@@ -1,0 +1,134 @@
+{
+	"name": "051_storageacc_web",
+	"properties": {
+		"description": "copy data from storage, if it fails trigger email",
+		"activities": [
+			{
+				"name": "Copy data1",
+				"description": "Copy data from CSV file to table",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table CompanySales",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Business Users",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-25.centralindia.logic.azure.com:443/workflows/b158c4e832dc4b2388b4ba90da9be563/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Rfphl7GjMpAe0_Uzu1vaW7IILWdYsrrmTwzwjwHT5Sg",
+					"body": {
+						"Message": "Current pipeline Success",
+						"DataFactoryName": "@{pipeline().DataFactory}",
+						"PipelineName": "@{pipeline().Pipeline}",
+						"emailto": "rajeshmacx@gmail.com,samrudh.macharla@gmail.com,gautam.macharla@gmail.com",
+						"Subject": "Pipeline Success!"
+					}
+				}
+			},
+			{
+				"name": "Development Team",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-25.centralindia.logic.azure.com:443/workflows/b158c4e832dc4b2388b4ba90da9be563/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Rfphl7GjMpAe0_Uzu1vaW7IILWdYsrrmTwzwjwHT5Sg",
+					"body": {
+						"Message": "Current pipeline Failed",
+						"DataFactoryName": "@{pipeline().DataFactory}",
+						"PipelineName": "@{pipeline().Pipeline}",
+						"emailto": "rajeshmacx@gmail.com,samrudh.macharla@gmail.com,gautam.macharla@gmail.com",
+						"Subject": "Pipeline Failed!"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-08-14T13:43:02Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

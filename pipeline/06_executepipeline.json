@@ -1,0 +1,54 @@
+{
+	"name": "06_executepipeline",
+	"properties": {
+		"description": "Execute multiple pipelines",
+		"activities": [
+			{
+				"name": "01_copydata",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01_copydata",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "02_procedure",
+				"description": "execute multiple pipelines",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01_copydata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02_procedure",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Straight Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-29T13:29:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

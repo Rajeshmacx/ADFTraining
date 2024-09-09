@@ -1,0 +1,40 @@
+{
+	"name": "05_webactivity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-25.centralindia.logic.azure.com:443/workflows/b158c4e832dc4b2388b4ba90da9be563/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Rfphl7GjMpAe0_Uzu1vaW7IILWdYsrrmTwzwjwHT5Sg",
+					"body": {
+						"Message": "Current pipeline Success",
+						"DataFactoryName": "@{pipeline().DataFactory}",
+						"PipelineName": "@{pipeline().Pipeline}",
+						"emailto": "rajeshmacx@gmail.com,samrudh.macharla@gmail.com,gautam.macharla@gmail.com",
+						"Subject": "Pipeline Success!"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Straight Pipelines"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-08-29T13:29:25Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
